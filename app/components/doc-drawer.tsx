@@ -27,11 +27,11 @@ function SectionRow({ section }: { section: ConstitutionSection }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="shrink-0 font-mono text-[10px] font-medium tabular-nums text-muted-foreground">
+          <span className="shrink-0 font-mono text-[10px] font-medium text-muted-foreground tabular-nums">
             §{section.section_number}
           </span>
           {section.change_mode !== "content" && (
-            <span className="shrink-0 rounded-sm border border-dashed border-ink-40 px-1 py-px text-[9px] uppercase text-ink-60">
+            <span className="shrink-0 rounded-sm border border-dashed border-ink-40 px-1 py-px text-[9px] text-ink-60 uppercase">
               {section.change_mode}
             </span>
           )}
@@ -45,7 +45,7 @@ function SectionRow({ section }: { section: ConstitutionSection }) {
           </p>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">
-          <span className="text-[9px] tabular-nums text-muted-foreground">
+          <span className="text-[9px] text-muted-foreground tabular-nums">
             {section.word_count}w
           </span>
           <svg
@@ -57,7 +57,12 @@ function SectionRow({ section }: { section: ConstitutionSection }) {
               expanded && "rotate-180",
             )}
           >
-            <path d="M2 3.5l3 3 3-3" stroke="currentColor" strokeWidth="1.2" fill="none" />
+            <path
+              d="M2 3.5l3 3 3-3"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              fill="none"
+            />
           </svg>
         </div>
       </div>
@@ -122,7 +127,8 @@ export function DocDrawer({
     activeChapter == null
       ? doc.sections.filter((s) => s.section_role === "content").slice(0, 40)
       : doc.sections.filter(
-          (s) => s.chapter_number === activeChapter && s.section_role === "content",
+          (s) =>
+            s.chapter_number === activeChapter && s.section_role === "content",
         )
 
   return (
@@ -139,19 +145,21 @@ export function DocDrawer({
       <div
         ref={drawerRef}
         className={cn(
-          "fixed right-0 top-0 z-50 flex h-full w-full max-w-2xl flex-col bg-card shadow-2xl transition-transform duration-300",
+          "fixed top-0 right-0 z-50 flex h-full w-full flex-col bg-card shadow-2xl transition-transform duration-300 sm:max-w-2xl",
           visible ? "translate-x-0" : "translate-x-full",
         )}
       >
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-border px-6 py-5">
+        <div className="flex items-start justify-between border-b border-border px-4 py-4 sm:px-6 sm:py-5">
           <div>
             <div className="flex items-center gap-2">
               <DocTypeBadge type={doc.doc_type} />
               <RegimeBadge regime={doc.regime_type} />
-              <span className="text-xs text-muted-foreground">{ERA_LABELS[doc.era]}</span>
+              <span className="text-xs text-muted-foreground">
+                {ERA_LABELS[doc.era]}
+              </span>
             </div>
-            <h2 className="mt-2 font-heading text-2xl font-black leading-tight tracking-tight text-foreground">
+            <h2 className="mt-2 font-heading text-2xl leading-tight font-black tracking-tight text-foreground">
               {doc.name_short}
             </h2>
             <p className="mt-0.5 text-xs text-muted-foreground">
@@ -173,62 +181,77 @@ export function DocDrawer({
             aria-label="Close"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" />
+              <path
+                d="M3 3l10 10M13 3L3 13"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
             </svg>
           </button>
         </div>
 
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 flex-col overflow-hidden sm:flex-row">
           {/* Sidebar — chapters + theme profile */}
-          <div className="flex w-44 shrink-0 flex-col overflow-y-auto border-r border-border">
+          <div className="flex shrink-0 flex-col overflow-y-auto border-b border-border sm:w-44 sm:border-r sm:border-b-0">
             <div className="px-3 py-3">
-              <div className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <div className="mb-2 text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
                 Chapters
               </div>
-              <button
-                onClick={() => setActiveChapter(null)}
-                className={cn(
-                  "mb-px w-full rounded-sm px-2 py-1.5 text-left text-[11px] transition-colors",
-                  activeChapter === null
-                    ? "bg-ink-100 font-medium text-white"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                )}
-              >
-                All sections
-              </button>
-              {chapters.map(([num, title]) => (
+              <div className="flex gap-1 overflow-x-auto pb-1 sm:block sm:overflow-x-visible sm:pb-0">
                 <button
-                  key={num}
-                  onClick={() => setActiveChapter(num)}
+                  onClick={() => setActiveChapter(null)}
                   className={cn(
-                    "mb-px w-full rounded-sm px-2 py-1.5 text-left text-[11px] leading-tight transition-colors",
-                    activeChapter === num
+                    "mb-px shrink-0 rounded-sm px-2 py-1.5 text-left text-[11px] transition-colors sm:w-full sm:shrink",
+                    activeChapter === null
                       ? "bg-ink-100 font-medium text-white"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
                 >
-                  {title || `Chapter ${num}`}
+                  All
                 </button>
-              ))}
+                {chapters.map(([num, title]) => (
+                  <button
+                    key={num}
+                    onClick={() => setActiveChapter(num)}
+                    className={cn(
+                      "mb-px shrink-0 rounded-sm px-2 py-1.5 text-left text-[11px] leading-tight transition-colors sm:w-full sm:shrink",
+                      activeChapter === num
+                        ? "bg-ink-100 font-medium text-white"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    )}
+                  >
+                    {title || `Ch.${num}`}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="mt-auto border-t border-border px-3 py-3">
-              <div className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <div className="hidden border-t border-border px-3 py-3 sm:block">
+              <div className="mb-2 text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
                 Theme profile
               </div>
               {THEMES_ORDERED.filter((t) => (doc.theme_profile[t] ?? 0) > 0)
-                .sort((a, b) => (doc.theme_profile[b] ?? 0) - (doc.theme_profile[a] ?? 0))
+                .sort(
+                  (a, b) =>
+                    (doc.theme_profile[b] ?? 0) - (doc.theme_profile[a] ?? 0),
+                )
                 .map((theme) => {
                   const score = doc.theme_profile[theme] ?? 0
-                  const pct = maxThemeScore > 0 ? (score / maxThemeScore) * 100 : 0
+                  const pct =
+                    maxThemeScore > 0 ? (score / maxThemeScore) * 100 : 0
                   return (
                     <div key={theme} className="mb-1.5">
                       <div className="mb-0.5 flex justify-between text-[9px] text-muted-foreground">
-                        <span className="truncate">{THEME_SHORT[theme] ?? theme}</span>
+                        <span className="truncate">
+                          {THEME_SHORT[theme] ?? theme}
+                        </span>
                         <span className="tabular-nums">{score.toFixed(0)}</span>
                       </div>
                       <div className="h-1 w-full bg-ink-10">
-                        <div className="h-full bg-ink-60" style={{ width: `${pct}%` }} />
+                        <div
+                          className="h-full bg-ink-60"
+                          style={{ width: `${pct}%` }}
+                        />
                       </div>
                     </div>
                   )
@@ -242,11 +265,15 @@ export function DocDrawer({
               <div className="border-b border-border bg-ink-10 px-5 py-3">
                 <p className="text-[11px] text-muted-foreground">
                   <span className="font-semibold text-foreground">
-                    {amendments.length} amendment{amendments.length > 1 ? "s" : ""}
+                    {amendments.length} amendment
+                    {amendments.length > 1 ? "s" : ""}
                   </span>{" "}
                   to this constitution:{" "}
                   {amendments.map((a) => (
-                    <span key={a.doc_id} className="mr-1.5 font-medium text-foreground">
+                    <span
+                      key={a.doc_id}
+                      className="mr-1.5 font-medium text-foreground"
+                    >
                       {a.name_short}
                     </span>
                   ))}
@@ -259,11 +286,15 @@ export function DocDrawer({
                 <SectionRow key={s.section_id} section={s} />
               ))}
               {activeChapter === null &&
-                doc.sections.filter((s) => s.section_role === "content").length > 40 && (
+                doc.sections.filter((s) => s.section_role === "content")
+                  .length > 40 && (
                   <div className="px-5 py-3 text-xs text-muted-foreground">
                     Showing first 40 of{" "}
-                    {doc.sections.filter((s) => s.section_role === "content").length} sections.
-                    Select a chapter to see all.
+                    {
+                      doc.sections.filter((s) => s.section_role === "content")
+                        .length
+                    }{" "}
+                    sections. Select a chapter to see all.
                   </div>
                 )}
             </div>
