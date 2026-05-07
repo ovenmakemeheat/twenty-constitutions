@@ -152,7 +152,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           src="/Democracy-monument-removebg-preview.png"
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-25 right-50 z-0"
+          className="pointer-events-none absolute -bottom-25 right-0 z-0"
           style={{ filter: "grayscale(100%)", opacity: 0.18, height: "240%", width: "auto", maxWidth: "none" }}
         />
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-14">
